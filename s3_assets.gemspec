@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["chaudharyamitiit2007@gmail.com"]
 
   spec.summary       = %q{Common package build up for storing s3 assets reference.}
-  spec.description   = %q{Tou can store s3 assets very easity using this}
+  spec.description   = %q{You can store s3 assets very easity using this}
   spec.homepage      = "https://github.com/chaudhary/s3_assets"
   spec.license       = "MIT"
 
