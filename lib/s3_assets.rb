@@ -1,4 +1,8 @@
 require "s3_assets/version"
+require "s3_assets/uploader"
+require "s3_assets/model"
+require "s3_assets/relations"
+require "s3_assets/utility"
 
 module S3Assets
   class << self
