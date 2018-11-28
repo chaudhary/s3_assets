@@ -5,6 +5,8 @@ class ::S3Assets::Uploader < CarrierWave::Uploader::Base
   UPLOAD_EXPIRATION = 2.hours
   MAX_FILE_SIZE = 20.megabytes
 
+  storage :fog
+
   process :set_model_content_type
 
   def original_filename
@@ -28,10 +30,6 @@ class ::S3Assets::Uploader < CarrierWave::Uploader::Base
         :region => ::S3Assets.aws_region,
         :host => ::S3Assets.fog_host,
     }
-  end
-
-  def storage
-    return :fog
   end
 
   def fog_directory
