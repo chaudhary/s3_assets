@@ -20,6 +20,7 @@ module ::S3Assets::Relations
   module ClassMethods
     def asset_belongs_to(relation_name, options = {})
       options[:class_name] = ::S3Assets::Model.to_s
+      options[:inverse_of] = nil
       related_doc_klass = options[:class_name].constantize
       field_name = "#{relation_name}_id".to_sym
 
@@ -29,6 +30,19 @@ module ::S3Assets::Relations
         self.send(:define_method, "#{field_name}=".to_sym) do |asset_id|
           asset_id = ::S3Assets::Relations::Helpers.proper_asset_id(asset_id, self)
           super(asset_id)
+        end
+
+        self.send(:define_method, "#{relation_name}_url=".to_sym) do |asset_url|
+          self.send("#{relation_name}_id=", asset_url)
+          return asset_url
+        end
+
+        self.send(:define_method, "#{relation_name}_url".to_sym) do |default_asset_path: nil, processing: {}|
+          ::S3Assets::Utility.url(self.send(relation_name), default_asset_path: default_asset_path, processing: processing)
+        end
+
+        self.send(:define_method, "#{relation_name}_json".to_sym) do |default_asset_path: nil, processing: {}|
+          ::S3Assets::Utility.json(self.send(relation_name), default_asset_path: default_asset_path, processing: processing)
         end
 
         after_save do |doc|
@@ -49,6 +63,7 @@ module ::S3Assets::Relations
 
     def asset_has_and_belongs_to_many(relation_name, options = {})
       options[:class_name] = ::S3Assets::Model.to_s
+      options[:inverse_of] = nil
       related_doc_klass = options[:class_name].constantize
       field_name = "#{relation_name.to_s.singularize}_ids".to_sym
 
@@ -62,6 +77,22 @@ module ::S3Assets::Relations
             end
           end
           super(asset_ids)
+        end
+
+        self.send(:define_method, "#{relation_name.to_s.singularize}_urls=".to_sym) do |asset_urls|
+          self.send("#{relation_name.to_s.singularize}_ids=".to_sym, asset_urls)
+        end
+
+        self.send(:define_method, "#{relation_name.to_s.singularize}_urls".to_sym) do |default_asset_path: nil, processing: {}|
+          self.send(relation_name).map do |asset|
+            ::S3Assets::Utility.url(asset, default_asset_path: default_asset_path, processing: processing)
+          end.compact
+        end
+
+        self.send(:define_method, "#{relation_name}_json".to_sym) do |default_asset_path: nil, processing: {}|
+          self.send(relation_name).map do |asset|
+            ::S3Assets::Utility.json(asset, default_asset_path: default_asset_path, processing: processing)
+          end.compact
         end
 
         after_save do |doc|

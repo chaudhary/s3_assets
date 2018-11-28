@@ -1,8 +1,8 @@
 module S3Assets::Utility
   extend self
 
-  def json(doc, type: nil, processing: nil)
-    file_url = url(doc, type: type, processing: processing)
+  def json(doc, default_asset_path: nil, processing: nil)
+    file_url = url(doc, default_asset_path: default_asset_path, processing: processing)
     return if file_url.blank?
 
     if doc.present? && doc.processed?
@@ -18,10 +18,14 @@ module S3Assets::Utility
     }
   end
 
-  def url(doc, type: nil, processing: nil)
-    return if doc.blank?
+  def url(doc, default_asset_path: nil, processing: nil)
+    if doc.blank?
+      if default_asset_path.present?
+        return ActionController::Base.helpers.asset_path(default_asset_path)
+      end
+      return
+    end
     return "https://#{::S3Assets.cloudfront_host}/#{doc.asset.path}" unless ::S3Assets.processing_enabled
-
     return doc.asset.url if !(doc.processed?)
 
     raw_url = "https://#{::S3Assets.cloudfront_host}/raw/#{doc.asset.path}"
