@@ -50,10 +50,10 @@ module S3Assets::Utility
     return temp_doc.asset.file.file
   end
 
-  def create!(filepath, parent: nil)
+  def create!(filepath)
     doc = nil
     File.open(filepath) do |file|
-      doc = ::S3Assets::Model.new(parent: parent)
+      doc = ::S3Assets::Model.new
       doc.asset = file
       doc.save!
     end

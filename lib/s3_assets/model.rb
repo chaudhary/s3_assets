@@ -7,10 +7,7 @@ class ::S3Assets::Model
   field :content_type, type: String
   field :absolute_url, type: String, default: nil
 
-  belongs_to :uploader, class_name: 'User'
   field :ip_address, type: String
-  field :parent, type: ShallowDocument
-  field :temp, type: Boolean
 
   after_save do |doc|
     doc.delay(priority: ::S3Assets.dj_priority).fetch_and_store_from_url! if doc.processable?

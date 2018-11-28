@@ -2,17 +2,17 @@ module ::S3Assets::Relations
   extend ActiveSupport::Concern
 
   module Helpers
-    def self.proper_asset_id(asset_id, parent)
+    def self.proper_asset_id(asset_id)
       return if asset_id.blank?
       return asset_id if BSON::ObjectId.legal?(asset_id)
 
       asset_id = "http:#{asset_id}" if asset_id.starts_with?("//")
 
       if asset_id.starts_with?("http")
-        return ::S3Assets::Model.create!(absolute_url: asset_id, uploader: RequestStore.store[:current_user],
-          ip_address: RequestStore.store[:ip_address], parent: parent).id
+        return ::S3Assets::Model.create!(absolute_url: asset_id,
+          ip_address: RequestStore.store[:ip_address]).id
       else
-        return ::S3Assets::Utility.create!(asset_id, parent: parent).id
+        return ::S3Assets::Utility.create!(asset_id).id
       end
     end
   end
