@@ -38,4 +38,11 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "bundler", "~> 1.17"
   spec.add_development_dependency "rake", "~> 10.0"
+  spec.add_development_dependency "mongoid", '~> 0'
+  spec.add_development_dependency "carrierwave", '~> 0'
+  spec.add_development_dependency "carrierwave-mongoid", '~> 0'
+  spec.add_development_dependency "fog-aws", '~> 0'
+  spec.add_development_dependency "fog", '~> 0'
+  spec.add_development_dependency "delayed_job", '~> 0'
+  spec.add_development_dependency "delayed_job_mongoid", '~> 0'
 end
