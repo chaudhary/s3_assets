@@ -28,7 +28,7 @@ module ::S3Assets::Relations
         self.belongs_to(relation_name, options)
 
         self.send(:define_method, "#{field_name}=".to_sym) do |asset_id|
-          asset_id = ::S3Assets::Relations::Helpers.proper_asset_id(asset_id, self)
+          asset_id = ::S3Assets::Relations::Helpers.proper_asset_id(asset_id)
           super(asset_id)
         end
 
@@ -73,7 +73,7 @@ module ::S3Assets::Relations
         self.send(:define_method, "#{field_name}=".to_sym) do |asset_ids|
           if asset_ids.present?
             asset_ids = asset_ids.reject(&:blank?).map do |asset_id|
-              ::S3Assets::Relations::Helpers.proper_asset_id(asset_id, self)
+              ::S3Assets::Relations::Helpers.proper_asset_id(asset_id)
             end
           end
           super(asset_ids)
